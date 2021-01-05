@@ -27,6 +27,16 @@ class Ball {
 
     this.x += this.vx;
     this.y += this.vy;
+
+    if (this.y <= 0) {
+      this.y = 0;
+      this.theta *= -1;
+    }
+    
+    if (this.y >= gameHeight - this.height) {
+      this.y >= gameHeight - this.height;
+      this.theta *= -1;
+    }
   }
 }
 
