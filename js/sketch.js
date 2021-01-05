@@ -9,9 +9,9 @@ class Ball {
 		this.v = 2;
 	}
 
-	reset(x, y) {
-		this.x = x;
-		this.y = y;
+	reset() {
+		this.x = gameWidth/2;
+		this.y = gameHeight/2;
 
 		this.theta = random(0, 2*PI);
 		this.v = 2;
@@ -58,13 +58,6 @@ class Paddle {
 		this.y = y;
 		this.width = width;
 		this.height = height;
-
-		this.vy = 0;
-	}
-
-	reset(x, y) {
-		this.x = x;
-		this.y = y;
 
 		this.vy = 0;
 	}
@@ -157,6 +150,17 @@ function draw() {
 			ball.x = player2Paddle.x - ball.width;
 			ball.v *= 1.2;
 			ball.theta = (PI - ball.theta) + random(-20, 20)*PI/180;
+		}
+
+		if(ball.x <= 0) {
+			player2Score++;
+			ball.reset();
+			gameState = 'pause';
+		}
+		if(ball.x >= gameWidth - ball.width) {
+			player1Score++;
+			ball.reset();
+			gameState = 'pause';
 		}
 
     	player1Paddle.update();
