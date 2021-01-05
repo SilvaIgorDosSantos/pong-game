@@ -38,6 +38,18 @@ class Ball {
 			this.theta *= -1;
 		}
 	}
+
+	collides(paddle) {
+		if(this.y > paddle.y + paddle.height || paddle.y > this.y + this.height) {
+			return false;
+		}
+
+		if(this.x > paddle.x + paddle.width || paddle.x > this.x + this.width) {
+			return false;
+		}
+
+		return true;
+	}
 }
 
 class Paddle {
@@ -136,6 +148,16 @@ function draw() {
 	}
     else if(gameState === 'play') {
 		screenText = '';
+		if(ball.collides(player1Paddle)) {
+			ball.x = player1Paddle.x + player1Paddle.width;
+			ball.v *= 1.2;
+			ball.theta = (PI - ball.theta) + random(-20, 20)*PI/180;
+		}
+		if(ball.collides(player2Paddle)) {
+			ball.x = player2Paddle.x - ball.width;
+			ball.v *= 1.2;
+			ball.theta = (PI - ball.theta) + random(-20, 20)*PI/180;
+		}
 
     	player1Paddle.update();
     	player2Paddle.update();
