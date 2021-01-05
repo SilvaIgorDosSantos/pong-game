@@ -40,9 +40,44 @@ class Ball {
   }
 }
 
+class Paddle {
+  constructor(x, y, width, height) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+
+    this.vy = 0;
+  }
+
+  reset(x, y) {
+    this.x = x;
+    this.y = y;
+
+    this.vy = 0;
+  }
+
+  render() {
+    rect(this.x, this.y, this.width, this.height);
+  }
+
+  update() {
+    this.y += this.vy;
+
+    if (this.y <= 0) {
+      this.y = 0;
+    }
+    
+    if (this.y >= gameHeight - this.height) {
+      this.y >= gameHeight - this.height;
+    }
+  }
+}
+
 let windowWidth, windowHeight;
 let gameWidth, gameHeight;
 let ball;
+let player1Paddle, player2Paddle;
 
 function setup() {
     windowWidth = window.innerWidth;
@@ -60,16 +95,20 @@ function setup() {
     fill(255, 255, 255);
 
     ball = new Ball(gameWidth/2, gameHeight/2, 10, 10);
-
-
+    player1Paddle = new Paddle(10, gameHeight/2, 10, 40);
+    player2Paddle = new Paddle(gameWidth - 20, gameHeight/2, 10, 40);
   }
   
   function draw() {
     background(0, 0, 0);
 
     ball.update();
+    player1Paddle.update();
+    player2Paddle.update();
 
     ball.render();
+    player1Paddle.render();
+    player2Paddle.render();
 
     
   }
