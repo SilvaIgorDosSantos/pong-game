@@ -1,77 +1,77 @@
 class Ball {
-  constructor(x, y, width, height) {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
+	constructor(x, y, width, height) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
 
-    this.theta = random(0, 2*PI);
-    this.v = 2;
-  }
+		this.theta = random(0, 2*PI);
+		this.v = 2;
+	}
 
-  reset(x, y) {
-    this.x = x;
-    this.y = y;
+	reset(x, y) {
+		this.x = x;
+		this.y = y;
 
-    this.theta = random(0, 2*PI);
-    this.v = 2;
-  }
+		this.theta = random(0, 2*PI);
+		this.v = 2;
+	}
 
-  render() {
-    rect(this.x, this.y, this.width, this.height);
-  }
+	render() {
+    	rect(this.x, this.y, this.width, this.height);
+	}
 
-  update() {
-    this.vx = this.v * cos(this.theta);
-    this.vy = this.v * sin(this.theta);
+	update() {
+		this.vx = this.v * cos(this.theta);
+		this.vy = this.v * sin(this.theta);
 
-    this.x += this.vx;
-    this.y += this.vy;
+		this.x += this.vx;
+		this.y += this.vy;
 
-    if (this.y <= 0) {
-      this.y = 0;
-      this.theta *= -1;
-    }
-    
-    if (this.y >= gameHeight - this.height) {
-      this.y >= gameHeight - this.height;
-      this.theta *= -1;
-    }
-  }
+		if (this.y <= 0) {
+			this.y = 0;
+			this.theta *= -1;
+		}
+		
+		if (this.y >= gameHeight - this.height) {
+			this.y >= gameHeight - this.height;
+			this.theta *= -1;
+		}
+	}
 }
 
 class Paddle {
-  constructor(x, y, width, height) {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
+	constructor(x, y, width, height) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
 
-    this.vy = 0;
-  }
+		this.vy = 0;
+	}
 
-  reset(x, y) {
-    this.x = x;
-    this.y = y;
+	reset(x, y) {
+		this.x = x;
+		this.y = y;
 
-    this.vy = 0;
-  }
+		this.vy = 0;
+	}
 
-  render() {
-    rect(this.x, this.y, this.width, this.height);
-  }
+	render() {
+    	rect(this.x, this.y, this.width, this.height);
+	}
 
-  update() {
-    this.y += this.vy;
+	update() {
+		this.y += this.vy;
 
-    if (this.y <= 0) {
-      this.y = 0;
-    }
-    
-    if (this.y >= gameHeight - this.height) {
-      this.y >= gameHeight - this.height;
-    }
-  }
+		if (this.y <= 0) {
+			this.y = 0;
+		}
+		
+		if (this.y >= gameHeight - this.height) {
+			this.y = gameHeight - this.height;
+		}
+	}
 }
 
 let windowWidth, windowHeight;
@@ -79,6 +79,7 @@ let gameWidth, gameHeight;
 let gameState;
 let ball;
 let player1Paddle, player2Paddle;
+let paddleMaximumSpeed = 2.5;
 
 function setup() {
     windowWidth = window.innerWidth;
@@ -98,11 +99,11 @@ function setup() {
     gameState = 'start';
 
     ball = new Ball(gameWidth/2, gameHeight/2, 10, 10);
-    player1Paddle = new Paddle(10, gameHeight/2, 10, 40);
-    player2Paddle = new Paddle(gameWidth - 20, gameHeight/2, 10, 40);
-  }
-  
-  function draw() {
+    player1Paddle = new Paddle(10, gameHeight/2, 10, 50);
+    player2Paddle = new Paddle(gameWidth - 20, gameHeight/2, 10, 50);
+}
+
+function draw() {
     background(0, 0, 0);
 
     if(gameState === 'start') {
@@ -123,4 +124,40 @@ function setup() {
     player2Paddle.render();
 
     
-  }
+}
+
+function keyPressed() {
+    switch(keyCode) {
+		case UP_ARROW:
+			player2Paddle.vy = -paddleMaximumSpeed;
+			break;
+		case DOWN_ARROW:
+			player2Paddle.vy = paddleMaximumSpeed;
+			break;
+		case 87: // W
+			player1Paddle.vy = -paddleMaximumSpeed;
+			break;
+		case 83: // S
+			player1Paddle.vy = paddleMaximumSpeed;
+			break;
+		default:
+			break;
+    }
+
+    return false;
+}
+
+function keyReleased() {
+    switch(keyCode) {
+    	case UP_ARROW:
+		case DOWN_ARROW:
+			player2Paddle.vy = 0;
+		case 87: // W
+		case 83: // S
+			player1Paddle.vy = 0;
+		default:
+			break;
+    }
+
+    return false;
+}
