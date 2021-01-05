@@ -74,12 +74,29 @@ class Paddle {
 	}
 }
 
+function renderText() {
+	if(screenText !== '') {
+		textSize(20);
+		textAlign(CENTER);
+		text(screenText, gameWidth/2, 40);
+	}
+}
+
+function renderScore() {
+	textSize(60);
+	textAlign(CENTER);
+	text(player1Score, (gameWidth)*0.25, 120);
+	text(player2Score, (gameWidth)*0.75, 120);
+}
+
 let windowWidth, windowHeight;
 let gameWidth, gameHeight;
 let gameState;
 let ball;
 let player1Paddle, player2Paddle;
 let paddleMaximumSpeed = 2.5;
+let screenText;
+let player1Score, player2Score;
 
 function setup() {
     windowWidth = window.innerWidth;
@@ -100,25 +117,35 @@ function setup() {
 
     ball = new Ball(gameWidth/2, gameHeight/2, 10, 10);
     player1Paddle = new Paddle(10, gameHeight/2, 10, 50);
-    player2Paddle = new Paddle(gameWidth - 20, gameHeight/2, 10, 50);
+	player2Paddle = new Paddle(gameWidth - 20, gameHeight/2, 10, 50);
+	player1Score = 0;
+	player2Score = 0;
 }
 
 function draw() {
     background(0, 0, 0);
 
     if(gameState === 'start') {
-      player1Paddle.update();
-      player2Paddle.update();
-    }
+		screenText = 'Welcome to Pong!\nPress Enter to begin';
+
+    	player1Paddle.update();
+      	player2Paddle.update();
+	}
+	else if(gameState === 'pause') {
+		screenText = 'Game is paused\nPress Enter to resume';
+	}
     else if(gameState === 'play') {
-      player1Paddle.update();
-      player2Paddle.update();
+		screenText = '';
 
-      ball.update();
+    	player1Paddle.update();
+    	player2Paddle.update();
+
+    	ball.update();
     }
     
     
-
+	renderText();
+	renderScore();
     ball.render();
     player1Paddle.render();
     player2Paddle.render();
@@ -129,17 +156,24 @@ function draw() {
 function keyPressed() {
     switch(keyCode) {
 		case UP_ARROW:
-			player2Paddle.vy = -paddleMaximumSpeed;
+			player2Paddle.vy -= paddleMaximumSpeed;
 			break;
 		case DOWN_ARROW:
-			player2Paddle.vy = paddleMaximumSpeed;
+			player2Paddle.vy += paddleMaximumSpeed;
 			break;
 		case 87: // W
-			player1Paddle.vy = -paddleMaximumSpeed;
+			player1Paddle.vy -= paddleMaximumSpeed;
 			break;
 		case 83: // S
-			player1Paddle.vy = paddleMaximumSpeed;
+			player1Paddle.vy += paddleMaximumSpeed;
 			break;
+		case ENTER:
+			if(gameState === 'start' || gameState === 'pause') {
+				gameState = 'play';
+			}
+			else if(gameState === 'play') {
+				gameState = 'pause';
+			}
 		default:
 			break;
     }
@@ -150,11 +184,17 @@ function keyPressed() {
 function keyReleased() {
     switch(keyCode) {
     	case UP_ARROW:
+			player2Paddle.vy += paddleMaximumSpeed;
+			break;
 		case DOWN_ARROW:
-			player2Paddle.vy = 0;
+			player2Paddle.vy -= paddleMaximumSpeed;
+			break;
 		case 87: // W
+			player1Paddle.vy += paddleMaximumSpeed;
+			break;
 		case 83: // S
-			player1Paddle.vy = 0;
+			player1Paddle.vy -= paddleMaximumSpeed;
+			break;
 		default:
 			break;
     }
