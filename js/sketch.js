@@ -76,6 +76,7 @@ class Paddle {
 
 let windowWidth, windowHeight;
 let gameWidth, gameHeight;
+let gameState;
 let ball;
 let player1Paddle, player2Paddle;
 
@@ -94,6 +95,8 @@ function setup() {
     noStroke();
     fill(255, 255, 255);
 
+    gameState = 'start';
+
     ball = new Ball(gameWidth/2, gameHeight/2, 10, 10);
     player1Paddle = new Paddle(10, gameHeight/2, 10, 40);
     player2Paddle = new Paddle(gameWidth - 20, gameHeight/2, 10, 40);
@@ -102,9 +105,18 @@ function setup() {
   function draw() {
     background(0, 0, 0);
 
-    ball.update();
-    player1Paddle.update();
-    player2Paddle.update();
+    if(gameState === 'start') {
+      player1Paddle.update();
+      player2Paddle.update();
+    }
+    else if(gameState === 'play') {
+      player1Paddle.update();
+      player2Paddle.update();
+
+      ball.update();
+    }
+    
+    
 
     ball.render();
     player1Paddle.render();
