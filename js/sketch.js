@@ -7,7 +7,7 @@ class Ball {
 
 		this.servingPlayer = random([1, 2]);
 
-		this.theta = this.servingPlayer === 1 ? random(7*PI/4, PI/4) : random(3*PI/4, 5*PI/4);
+		this.theta = this.servingPlayer === 1 ? random(-PI/4, PI/4) : random(3*PI/4, 5*PI/4);
 		this.v = 2;
 	}
 
@@ -17,8 +17,8 @@ class Ball {
 
 		this.servingPlayer = servingPlayer;
 
-		this.theta = this.servingPlayer === 1 ? random(7*PI/4, PI/4) : random(3*PI/4, 5*PI/4);
-		this.v = 2;
+		this.theta = this.servingPlayer === 1 ? random(-PI/4, PI/4) : random(3*PI/4, 5*PI/4);
+		this.v = 3;
 	}
 
 	render() {
@@ -106,6 +106,7 @@ let player1Paddle, player2Paddle;
 let paddleMaximumSpeed = 2.5;
 let screenText;
 let player1Score, player2Score;
+let winningPlayer;
 
 function setup() {
     windowWidth = window.innerWidth;
@@ -145,6 +146,15 @@ function draw() {
 	}
 	else if(gameState === 'serve') {
 		screenText = `Player ${ball.servingPlayer}'s serve\nPress Enter to serve`;
+
+		player1Paddle.update();
+      	player2Paddle.update();
+	}
+	else if(gameState === 'done') {
+		screenText = `Player ${winningPlayer} won\nPress Enter to restart!`;
+
+		player1Paddle.update();
+      	player2Paddle.update();
 	}
     else if(gameState === 'play') {
 		screenText = '';
@@ -161,13 +171,29 @@ function draw() {
 
 		if(ball.x <= 0) {
 			player2Score++;
-			ball.reset(1);
-			gameState = 'serve';
+
+			if(player2Score === 10) {
+				winningPlayer = 2;
+				ball.reset([1, 2]);
+				gameState = 'done';
+			}
+			else {
+				ball.reset(1);
+				gameState = 'serve';
+			}
 		}
 		if(ball.x >= gameWidth - ball.width) {
 			player1Score++;
-			ball.reset(2);
-			gameState = 'serve';
+			
+			if(player1Score === 10) {
+				winningPlayer = 1;
+				ball.reset([1, 2]);
+				gameState = 'done';
+			}
+			else {
+				ball.reset(2);
+				gameState = 'serve';
+			}
 		}
 
     	player1Paddle.update();
@@ -206,6 +232,11 @@ function keyPressed() {
 			}
 			else if(gameState === 'play') {
 				gameState = 'pause';
+			}
+			else if(gameState === 'done') {
+				player1Score = 0;
+				player2Score = 0;
+				gameState = 'play';
 			}
 		default:
 			break;
