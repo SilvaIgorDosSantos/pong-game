@@ -5,15 +5,19 @@ class Ball {
 		this.width = width;
 		this.height = height;
 
-		this.theta = random(0, 2*PI);
+		this.servingPlayer = random([1, 2]);
+
+		this.theta = this.servingPlayer === 1 ? random(7*PI/4, PI/4) : random(3*PI/4, 5*PI/4);
 		this.v = 2;
 	}
 
-	reset() {
+	reset(servingPlayer) {
 		this.x = gameWidth/2;
 		this.y = gameHeight/2;
 
-		this.theta = random(0, 2*PI);
+		this.servingPlayer = servingPlayer;
+
+		this.theta = this.servingPlayer === 1 ? random(7*PI/4, PI/4) : random(3*PI/4, 5*PI/4);
 		this.v = 2;
 	}
 
@@ -139,6 +143,9 @@ function draw() {
 	else if(gameState === 'pause') {
 		screenText = 'Game is paused\nPress Enter to resume';
 	}
+	else if(gameState === 'serve') {
+		screenText = `Player ${ball.servingPlayer}'s serve\nPress Enter to serve`;
+	}
     else if(gameState === 'play') {
 		screenText = '';
 		if(ball.collides(player1Paddle)) {
@@ -154,13 +161,13 @@ function draw() {
 
 		if(ball.x <= 0) {
 			player2Score++;
-			ball.reset();
-			gameState = 'pause';
+			ball.reset(1);
+			gameState = 'serve';
 		}
 		if(ball.x >= gameWidth - ball.width) {
 			player1Score++;
-			ball.reset();
-			gameState = 'pause';
+			ball.reset(2);
+			gameState = 'serve';
 		}
 
     	player1Paddle.update();
@@ -194,7 +201,7 @@ function keyPressed() {
 			player1Paddle.vy += paddleMaximumSpeed;
 			break;
 		case ENTER:
-			if(gameState === 'start' || gameState === 'pause') {
+			if(gameState === 'start' || gameState === 'pause' || gameState === 'serve') {
 				gameState = 'play';
 			}
 			else if(gameState === 'play') {
