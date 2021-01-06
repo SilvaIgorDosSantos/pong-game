@@ -8,7 +8,7 @@ class Ball {
 		this.servingPlayer = random([1, 2]);
 
 		this.theta = this.servingPlayer === 1 ? random(-PI/4, PI/4) : random(3*PI/4, 5*PI/4);
-		this.v = 2;
+		this.v = 3.5;
 	}
 
 	reset(servingPlayer) {
@@ -18,7 +18,7 @@ class Ball {
 		this.servingPlayer = servingPlayer;
 
 		this.theta = this.servingPlayer === 1 ? random(-PI/4, PI/4) : random(3*PI/4, 5*PI/4);
-		this.v = 3;
+		this.v = 3.5;
 	}
 
 	render() {
@@ -79,6 +79,18 @@ class Paddle {
 		
 		if (this.y >= gameHeight - this.height) {
 			this.y = gameHeight - this.height;
+		}
+	}
+
+	resetSpeed() {
+		if(this.vy > 0) {
+			this.vy = paddleMaximumSpeed;
+		}
+		else if(this.vy < 0) {
+			this.vy = -paddleMaximumSpeed;
+		}
+		else {
+			this.vy = 0;
 		}
 	}
 }
@@ -161,11 +173,17 @@ function draw() {
 		if(ball.collides(player1Paddle)) {
 			ball.x = player1Paddle.x + player1Paddle.width;
 			ball.v *= 1.2;
+			paddleMaximumSpeed *= 1.1;
+			player1Paddle.resetSpeed();
+			player2Paddle.resetSpeed();
 			ball.theta = (PI - ball.theta) + random(-20, 20)*PI/180;
 		}
 		if(ball.collides(player2Paddle)) {
 			ball.x = player2Paddle.x - ball.width;
 			ball.v *= 1.2;
+			paddleMaximumSpeed *= 1.1;
+			player1Paddle.resetSpeed();
+			player2Paddle.resetSpeed();
 			ball.theta = (PI - ball.theta) + random(-20, 20)*PI/180;
 		}
 
