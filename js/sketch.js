@@ -129,8 +129,8 @@ function setup() {
     gameWidth = windowWidth*windowsWidthPercentage;
     gameHeight = gameWidth*aspectRatio;
 
-    let canvas = createCanvas(gameWidth, gameHeight);
-    canvas.position(windowWidth/2 - gameWidth/2,windowHeight/2 - gameHeight/2);
+	let canvas = createCanvas(gameWidth, gameHeight);
+	canvas.parent('canvas');
 
     noStroke();
     fill(255, 255, 255);

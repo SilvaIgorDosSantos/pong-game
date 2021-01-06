@@ -7,3 +7,9 @@ h1 {
     padding-bottom: 15px;
     text-align: center;
 }
+
+#canvas {
+    padding-top: 25px;
+    display: flex;
+    justify-content: center;
+}
